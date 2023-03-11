@@ -30,6 +30,8 @@ import org.apache.zeppelin.interpreter.remote.RemoteInterpreterEventClient;
 import org.apache.zeppelin.r.IRInterpreterTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -46,6 +48,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class SparkIRInterpreterTest extends IRInterpreterTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SparkIRInterpreterTest.class);
 
   private final RemoteInterpreterEventClient mockRemoteIntpEventClient = mock(RemoteInterpreterEventClient.class);
 
@@ -118,6 +122,8 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
                   "           x <- cbind(x, \"waiting_secs\" = x$waiting * 60)\n" +
                   "         })\n" +
                   "head(ldf, 3)", context2);
+          LOGGER.debug("Interpreter cancelled then result: " + result);
+          LOGGER.debug("Interpreter cancelled then result: " + result.toJson());
           assertTrue(result.message().get(0).getData().contains("cancelled"));
         } catch (InterpreterException e) {
           fail("Should not throw InterpreterException");
