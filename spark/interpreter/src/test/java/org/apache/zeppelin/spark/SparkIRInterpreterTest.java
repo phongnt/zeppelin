@@ -28,8 +28,8 @@ import org.apache.zeppelin.interpreter.InterpreterResultMessage;
 import org.apache.zeppelin.interpreter.LazyOpenInterpreter;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreterEventClient;
 import org.apache.zeppelin.r.IRInterpreterTest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,17 +37,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class SparkIRInterpreterTest extends IRInterpreterTest {
 
-  private RemoteInterpreterEventClient mockRemoteIntpEventClient = mock(RemoteInterpreterEventClient.class);
+  private final RemoteInterpreterEventClient mockRemoteIntpEventClient = mock(RemoteInterpreterEventClient.class);
 
   @Override
   protected Interpreter createInterpreter(Properties properties) {
@@ -55,7 +55,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
   }
 
   @Override
-  @Before
+  @BeforeEach
   public void setUp() throws InterpreterException {
     Properties properties = new Properties();
     properties.setProperty(SparkStringConstants.MASTER_PROP_NAME, "local");
@@ -100,7 +100,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     context = getInterpreterContext();
     result = interpreter.interpret("df <- as.DataFrame(faithful)\nhead(df)", context);
     interpreterResultMessages = context.out.toInterpreterResultMessage();
-    assertEquals(context.out.toString(), InterpreterResult.Code.SUCCESS, result.code());
+    assertEquals(InterpreterResult.Code.SUCCESS, result.code(), context.out.toString());
     assertTrue(interpreterResultMessages.get(0).getData().contains(">eruptions</th>"));
     // spark job url is sent
     verify(mockRemoteIntpEventClient, atLeastOnce()).onParaInfosReceived(any(Map.class));
@@ -132,13 +132,12 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
 
   @Override
   protected InterpreterContext getInterpreterContext() {
-    InterpreterContext context = InterpreterContext.builder()
+    return InterpreterContext.builder()
             .setNoteId("note_1")
             .setParagraphId("paragraph_1")
             .setInterpreterOut(new InterpreterOutput())
             .setLocalProperties(new HashMap<>())
             .setIntpEventClient(mockRemoteIntpEventClient)
             .build();
-    return context;
   }
 }
