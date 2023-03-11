@@ -51,7 +51,7 @@ jobs:
             !~/.m2/repository/org/apache/zeppelin/
             ~/.spark-dist
             ~/.cache
-          key: ${{ runner.os }}-zeppelin-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-zeppelin-dfb3df3ec17d1e28875b12b33e4d519c63843356b3e9a90518f996ff0ec46887
           restore-keys: |
             ${{ runner.os }}-zeppelin-
       - name: install environment
@@ -73,4 +73,4 @@ jobs:
       - name: run spark-3.2 tests with scala-2.12 and python-${{ matrix.python }}
         run: |
           rm -rf spark/interpreter/metastore_db
-          ./mvnw verify -pl spark/interpreter -am -Dtest=org/apache/zeppelin/spark/* -Pspark-3.2 -Pspark-scala-2.12 -Phadoop2 -Pintegration -DfailIfNoTests=false ${MAVEN_ARGS}
+          ./mvnw verify -pl spark/interpreter -am -Dtest=SparkIRInterpreterTest#testSparkRInterpreter -Pspark-3.2 -Pspark-scala-2.12 -Phadoop2 -Pintegration -DskipShaded=true -DfailIfNoTests=false ${MAVEN_ARGS}

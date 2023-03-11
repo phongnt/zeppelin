@@ -130,9 +130,11 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
         }
       }
     };
+    LOGGER.debug("Start Cancel-Thread");
     thread.setName("Cancel-Thread");
     thread.start();
     Thread.sleep(1000);
+    LOGGER.debug("Cancel context");
     interpreter.cancel(context2);
   }
 
