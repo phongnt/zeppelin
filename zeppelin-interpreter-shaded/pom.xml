@@ -34,7 +34,6 @@
 
   <properties>
     <shaded.dependency.prefix>shaded.org.apache.zeppelin</shaded.dependency.prefix>
-    <skipShaded>false</skipShaded>
   </properties>
 
   <dependencies>

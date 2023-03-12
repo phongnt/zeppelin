@@ -96,6 +96,7 @@
   </modules>
 
   <properties>
+    <skipShaded>false</skipShaded>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- language versions -->

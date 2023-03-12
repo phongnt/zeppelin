@@ -61,6 +61,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
   @Override
   @BeforeEach
   public void setUp() throws InterpreterException {
+    LOGGER.debug("Start setupUp");
     Properties properties = new Properties();
     properties.setProperty(SparkStringConstants.MASTER_PROP_NAME, "local");
     properties.setProperty(SparkStringConstants.APP_NAME_PROP_NAME, "test");
@@ -72,7 +73,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     InterpreterContext context = getInterpreterContext();
     InterpreterContext.set(context);
     interpreter = createInterpreter(properties);
-
+    LOGGER.debug("Interpreter created");
     InterpreterGroup interpreterGroup = new InterpreterGroup();
     interpreterGroup.addInterpreterToSession(new LazyOpenInterpreter(interpreter), "session_1");
     interpreter.setInterpreterGroup(interpreterGroup);
@@ -80,8 +81,9 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     SparkInterpreter sparkInterpreter = new SparkInterpreter(properties);
     interpreterGroup.addInterpreterToSession(new LazyOpenInterpreter(sparkInterpreter), "session_1");
     sparkInterpreter.setInterpreterGroup(interpreterGroup);
-
+    LOGGER.debug("Spark Interpreter created");
     interpreter.open();
+    LOGGER.debug("End setupUp");
   }
 
 
@@ -89,13 +91,14 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
   public void testSparkRInterpreter() throws InterpreterException, InterruptedException, IOException {
     InterpreterContext context = getInterpreterContext();
     InterpreterResult result = interpreter.interpret("1+1", context);
+    LOGGER.debug("1+1=" + result.toJson());
     assertEquals(InterpreterResult.Code.SUCCESS, result.code());
     List<InterpreterResultMessage> interpreterResultMessages = context.out.toInterpreterResultMessage();
     assertTrue(interpreterResultMessages.get(0).getData().contains("2"));
 
     context = getInterpreterContext();
     result = interpreter.interpret("sparkR.version()", context);
-
+    LOGGER.debug("sparkR.version() is " + result.toJson());
     assertEquals(InterpreterResult.Code.SUCCESS, result.code());
     interpreterResultMessages = context.out.toInterpreterResultMessage();
     if (interpreterResultMessages.get(0).getData().contains("2.2")) {
@@ -103,6 +106,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     }
     context = getInterpreterContext();
     result = interpreter.interpret("df <- as.DataFrame(faithful)\nhead(df)", context);
+    LOGGER.debug("head(df) is " + result.toJson());
     interpreterResultMessages = context.out.toInterpreterResultMessage();
     assertEquals(InterpreterResult.Code.SUCCESS, result.code(), context.out.toString());
     assertTrue(interpreterResultMessages.get(0).getData().contains(">eruptions</th>"));
@@ -115,6 +119,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
       @Override
       public void run() {
         try {
+          LOGGER.debug("Start running");
           InterpreterResult result = interpreter.interpret("ldf <- dapplyCollect(\n" +
                   "         df,\n" +
                   "         function(x) {\n" +
@@ -122,7 +127,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
                   "           x <- cbind(x, \"waiting_secs\" = x$waiting * 60)\n" +
                   "         })\n" +
                   "head(ldf, 3)", context2);
-          LOGGER.debug("Interpreter cancelled then result: " + result);
+          LOGGER.debug("context2 out is " + context2.out.toString());
           LOGGER.debug("Interpreter cancelled then result: " + result.toJson());
           assertTrue(result.message().get(0).getData().contains("cancelled"));
         } catch (InterpreterException e) {
