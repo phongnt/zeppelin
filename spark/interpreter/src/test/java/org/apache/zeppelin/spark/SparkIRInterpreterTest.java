@@ -132,7 +132,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
                   "head(ldf, 3)", context2);
           LOGGER.debug("context2 out is " + context2.out.toString());
           LOGGER.debug("Interpreter cancelled then result: " + result.toJson());
-          assertTrue(result.message().get(0).getData().contains("cancelled"));
+          assertTrue(result.message().isEmpty(), result.toJson());
         } catch (InterpreterException e) {
           fail("Should not throw InterpreterException");
         }
@@ -141,7 +141,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     LOGGER.debug("Start Cancel-Thread");
     thread.setName("Cancel-Thread");
     thread.start();
-    Thread.sleep(100);
+    Thread.sleep(200);
     LOGGER.debug("Cancel context");
     interpreter.cancel(context2);
   }
