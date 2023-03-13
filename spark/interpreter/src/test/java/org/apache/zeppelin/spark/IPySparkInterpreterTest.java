@@ -30,7 +30,7 @@ import org.apache.zeppelin.interpreter.LazyOpenInterpreter;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreterEventClient;
 import org.apache.zeppelin.interpreter.thrift.InterpreterCompletion;
 import org.apache.zeppelin.python.IPythonInterpreterTest;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -247,7 +247,7 @@ public class IPySparkInterpreterTest extends IPythonInterpreterTest {
       fail("Should not be able to start IPythonInterpreter");
     } catch (InterpreterException e) {
       String exceptionMsg = ExceptionUtils.getStackTrace(e);
-      assertTrue(exceptionMsg.contains("No such file or directory"), exceptionMsg);
+      assertTrue(exceptionMsg, exceptionMsg.contains("No such file or directory"));
     }
   }
 
