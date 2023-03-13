@@ -94,6 +94,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     LOGGER.debug("1+1=" + result.toJson());
     assertEquals(InterpreterResult.Code.SUCCESS, result.code());
     List<InterpreterResultMessage> interpreterResultMessages = context.out.toInterpreterResultMessage();
+    LOGGER.debug("1+1= context out " + context.out.toString());
     assertTrue(interpreterResultMessages.get(0).getData().contains("2"));
 
     context = getInterpreterContext();
@@ -101,6 +102,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     LOGGER.debug("sparkR.version() is " + result.toJson());
     assertEquals(InterpreterResult.Code.SUCCESS, result.code());
     interpreterResultMessages = context.out.toInterpreterResultMessage();
+    LOGGER.debug("sparkR.version() context out " + context.out.toString());
     if (interpreterResultMessages.get(0).getData().contains("2.2")) {
       ENABLE_GOOGLEVIS_TEST = false;
     }
@@ -108,6 +110,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     result = interpreter.interpret("df <- as.DataFrame(faithful)\nhead(df)", context);
     LOGGER.debug("head(df) is " + result.toJson());
     interpreterResultMessages = context.out.toInterpreterResultMessage();
+    LOGGER.debug("head(df) context out " + context.out.toString());
     assertEquals(InterpreterResult.Code.SUCCESS, result.code(), context.out.toString());
     assertTrue(interpreterResultMessages.get(0).getData().contains(">eruptions</th>"));
     // spark job url is sent
@@ -138,7 +141,7 @@ public class SparkIRInterpreterTest extends IRInterpreterTest {
     LOGGER.debug("Start Cancel-Thread");
     thread.setName("Cancel-Thread");
     thread.start();
-    Thread.sleep(1000);
+    Thread.sleep(100);
     LOGGER.debug("Cancel context");
     interpreter.cancel(context2);
   }
