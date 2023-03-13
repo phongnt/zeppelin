@@ -179,7 +179,7 @@ public class KotlinSparkInterpreterTest {
         InterpreterResult result = interpreter.interpret(
             "spark.range(10).foreach { Thread.sleep(1000) }", context);
         assertEquals(ERROR, result.code());
-        assertTrue(result.message().get(0).getData().trim().contains("cancelled"));
+        assertTrue(result.message().get(0).getData().contains("cancelled"), result.toJson());
       } catch (UnsupportedClassVersionError e) {
         if (sparkSupported) {
           fail(e.getMessage());

@@ -73,4 +73,4 @@ jobs:
       - name: run spark-3.2 tests with scala-2.12 and python-${{ matrix.python }}
         run: |
           rm -rf spark/interpreter/metastore_db
-          ./mvnw verify -pl spark/interpreter -am -Dtest=SparkIRInterpreterTest,SparkRInterpreterTest,KotlinSparkInterpreterTest,IPySparkInterpreterTest -Pspark-3.2 -Pspark-scala-2.12 -Phadoop2 -Pintegration -DskipShaded=true -DfailIfNoTests=false ${MAVEN_ARGS}
+          ./mvnw verify -pl spark/interpreter -am -Dtest=SparkIRInterpreterTest,SparkRInterpreterTest,KotlinSparkInterpreterTest,IPySparkInterpreterTest,SparkVersionTest,SparkSqlInterpreterTest,SparkShinyInterpreterTest -Pspark-3.2 -Pspark-scala-2.12 -Phadoop2 -Pintegration -DskipShaded=true -DfailIfNoTests=false ${MAVEN_ARGS}

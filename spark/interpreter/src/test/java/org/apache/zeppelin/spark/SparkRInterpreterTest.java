@@ -107,7 +107,7 @@ public class SparkRInterpreterTest {
                   "           x <- cbind(x, \"waiting_secs\" = x$waiting * 60)\n" +
                   "         })\n" +
                   "head(ldf, 3)", finalContext);
-          assertTrue(result.message().isEmpty(), result.toJson());
+          assertTrue(result.message().get(0).getData().contains("cancelled"), result.toJson());
         } catch (InterpreterException e) {
           fail("Should not throw InterpreterException");
         }

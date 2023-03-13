@@ -28,9 +28,9 @@ import org.apache.zeppelin.interpreter.InterpreterResult;
 import org.apache.zeppelin.interpreter.InterpreterResultMessage;
 import org.apache.zeppelin.interpreter.LazyOpenInterpreter;
 import org.apache.zeppelin.r.ShinyInterpreterTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,15 +38,13 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class SparkShinyInterpreterTest extends ShinyInterpreterTest {
 
-  private SparkInterpreter sparkInterpreter;
-
-  @Before
+  @BeforeEach
   public void setUp() throws InterpreterException {
     Properties properties = new Properties();
     properties.setProperty(SparkStringConstants.MASTER_PROP_NAME, "local[*]");
@@ -60,14 +58,14 @@ public class SparkShinyInterpreterTest extends ShinyInterpreterTest {
     interpreterGroup.addInterpreterToSession(new LazyOpenInterpreter(interpreter), "session_1");
     interpreter.setInterpreterGroup(interpreterGroup);
 
-    sparkInterpreter = new SparkInterpreter(properties);
+    SparkInterpreter sparkInterpreter = new SparkInterpreter(properties);
     interpreterGroup.addInterpreterToSession(new LazyOpenInterpreter(sparkInterpreter), "session_1");
     sparkInterpreter.setInterpreterGroup(interpreterGroup);
 
     interpreter.open();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws InterpreterException {
     if (interpreter != null) {
       interpreter.close();
@@ -102,10 +100,10 @@ public class SparkShinyInterpreterTest extends ShinyInterpreterTest {
     Thread.sleep(5 * 1000);
     // extract shiny url
     List<InterpreterResultMessage> resultMessages = context2.out.toInterpreterResultMessage();
-    assertEquals(resultMessages.toString(), 1, resultMessages.size());
+    assertEquals(1, resultMessages.size(), resultMessages.toString());
     assertEquals(InterpreterResult.Type.HTML, resultMessages.get(0).getType());
     String resultMessageData = resultMessages.get(0).getData();
-    assertTrue(resultMessageData, resultMessageData.contains("<iframe"));
+    assertTrue(resultMessageData.contains("<iframe"), resultMessageData);
     Pattern urlPattern = Pattern.compile(".*src=\"(http\\S*)\".*", Pattern.DOTALL);
     Matcher matcher = urlPattern.matcher(resultMessageData);
     if (!matcher.matches()) {
@@ -116,6 +114,6 @@ public class SparkShinyInterpreterTest extends ShinyInterpreterTest {
     // verify shiny app via calling its rest api
     HttpResponse<String> response = Unirest.get(shinyURL).asString();
     assertEquals(200, response.getStatus());
-    assertTrue(response.getBody(), response.getBody().contains("Spark Version"));
+    assertTrue(response.getBody().contains("Spark Version"), response.getBody());
   }
 }
